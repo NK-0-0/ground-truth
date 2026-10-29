@@ -1,0 +1,72 @@
+<div class="hg-map-title">
+  <span>DERIVED — NOT CADASTRAL</span>
+  <span class="hg-pill fail">BLOCKED · {{ boundary().check.gaps.length }} open ends</span>
+</div>
+<svg
+  #svg
+  [class.compact]="compact()"
+  [attr.viewBox]="viewBox()"
+  role="img"
+  tabindex="0"
+  [attr.aria-label]="
+    setKey() + ' footprints, seven source envelopes, open boundary linework and gap markers'
+  "
+  (wheel)="onWheel($event, svg)"
+  (pointerdown)="onPointerDown($event, svg)"
+  (pointermove)="onPointerMove($event, svg)"
+  (pointerup)="onPointerUp($event)"
+  (keydown)="onKeydown($event)"
+>
+  @for (d of contextPaths(); track $index) {
+    <path [attr.d]="d" fill="#d8ddd2" stroke="#aeb8a9" stroke-width=".7" />
+  }
+  @for (d of envelopePaths(); track $index) {
+    <path [attr.d]="d" fill="#d95d4933" stroke="#b73a3633" stroke-width=".6" fill-rule="evenodd" />
+  }
+  @for (f of featurePaths(); track $index) {
+    <path
+      class="feature"
+      [attr.data-hi]="$index"
+      [attr.d]="f.d"
+      [attr.fill]="$index === selected() ? '#dfb261' : '#35796f'"
+      stroke="#173c36"
+      stroke-width="1"
+      fill-rule="evenodd"
+    >
+      <title>{{ f.title }}</title>
+    </path>
+  }
+  @if (optionPath(); as d) {
+    <path [attr.d]="d" fill="#25706a66" stroke="#25706a" stroke-width="3" />
+  }
+  <path
+    [attr.d]="derivedPath()"
+    fill="none"
+    stroke="#a26a16"
+    stroke-dasharray="12 8"
+    stroke-width="2"
+    vector-effect="non-scaling-stroke"
+  />
+  <g fill="none" stroke="#ad2639" stroke-width="2" vector-effect="non-scaling-stroke">
+    @for (pts of boundaryLines(); track $index) {
+      <polyline [attr.points]="pts" />
+    }
+  </g>
+  @for (p of boundary().check.gaps; track $index) {
+    <g>
+      <circle
+        [attr.cx]="p[0]"
+        [attr.cy]="p[1]"
+        r="7"
+        fill="#fff4dd"
+        stroke="#ad2639"
+        stroke-width="2"
+      />
+      <text [attr.x]="p[0] + 10" [attr.y]="p[1] - 9" fill="#ad2639" font-size="20">⚠</text>
+    </g>
+  }
+</svg>
+<p class="hg-map-note">
+  North ↑ · Teal: proposals · Grey: context · Red tint: supplied envelopes · Red lines/circles:
+  incomplete boundary and open ends · Gold dash: derived study hull. {{ fingerprint() }}
+</p>

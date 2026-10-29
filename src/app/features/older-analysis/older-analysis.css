@@ -1,0 +1,111 @@
+:host {
+  background: #102b39;
+  min-width: 0;
+  padding: 20px;
+}
+
+h2 {
+  font-size: 21px;
+  margin-bottom: 8px;
+}
+
+p {
+  margin-bottom: 10px;
+}
+
+#history-status {
+  font-size: 12px;
+  color: #b8d2d9;
+  min-height: 22px;
+}
+
+.history-tools {
+  padding: 14px;
+  background: #0b2431;
+  border: 1px solid #345363;
+  border-radius: 7px 7px 0 0;
+}
+
+.history-topics {
+  display: flex;
+  gap: 7px;
+  flex-wrap: wrap;
+}
+
+.history-tools button {
+  min-height: 44px;
+  font-size: 12px;
+}
+
+.history-topics button {
+  min-height: 38px;
+  padding: 8px 12px;
+}
+
+.history-search {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 8px;
+}
+
+.history-search label {
+  font-size: 12px;
+  margin: 0;
+}
+
+.history-search input {
+  flex: 1;
+  min-width: 180px;
+  width: auto;
+  margin: 0;
+  padding: 11px;
+  border: 1px solid #557b86;
+  background: #102b39;
+  color: #e4f0f4;
+  border-radius: 5px;
+}
+
+.history-results {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-top: 8px;
+}
+
+.history-results:empty {
+  margin: 0;
+}
+
+.history-results button {
+  max-width: 100%;
+  text-align: left;
+}
+
+iframe {
+  display: block;
+  width: 100%;
+  height: min(78vh, 900px);
+  min-height: 540px;
+  max-height: 900px;
+  border: 1px solid #345363;
+  border-radius: 0 0 7px 7px;
+  background: #071822;
+}
+
+@media (max-width: 760px) {
+  .history-tools {
+    padding: 10px;
+  }
+
+  .history-topics {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .history-search input {
+    width: 100%;
+    flex-basis: 100%;
+  }
+}

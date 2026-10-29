@@ -1,0 +1,98 @@
+.mp-action-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 315px;
+  gap: 15px;
+  align-items: start;
+}
+
+.mp-action-table {
+  max-height: 740px;
+}
+
+.mp-action-table td {
+  line-height: 1.6;
+}
+
+.mp-action-table td:first-child {
+  min-width: 145px;
+}
+
+.mp-action-table td:nth-child(2) {
+  min-width: 230px;
+}
+
+.mp-action-table td:nth-child(3) {
+  min-width: 260px;
+}
+
+.mp-status {
+  font-size: 10px;
+  display: inline-block;
+  padding: 4px 7px;
+  border: 1px solid #8d7b54;
+  background: #6c5c2029;
+  color: #e4c68e;
+  border-radius: 4px;
+}
+
+.mp-status.progress {
+  color: #a6d9ca;
+  border-color: #5b9585;
+}
+
+.mp-status.ready {
+  color: #c4dfbb;
+  border-color: #7c9d6c;
+}
+
+.mp-action-form {
+  padding: 16px;
+  border: 1px solid #40616b;
+  border-radius: 6px;
+  background: #0b2632;
+}
+
+.mp-action-form h4 {
+  font-size: 15px;
+}
+
+.mp-action-form label {
+  font-size: 11px;
+}
+
+.mp-action-form textarea {
+  min-height: 95px;
+}
+
+.mp-action-form button {
+  width: 100%;
+  margin-top: 13px;
+}
+
+.mp-action-form p {
+  font-size: 10px;
+  color: #adc5ce;
+}
+
+@media (max-width: 1150px) {
+  .mp-action-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .mp-action-form {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4px 14px;
+  }
+
+  .mp-action-form h4,
+  .mp-action-form .mp-full {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 460px) {
+  .mp-action-form {
+    display: block;
+  }
+}

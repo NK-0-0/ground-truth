@@ -1,0 +1,138 @@
+<div class="mp-map-shell">
+  <svg
+    #svg
+    id="mp-map"
+    tabindex="0"
+    role="img"
+    aria-label="Interactive campus masterplan. Drag to pan; use zoom and precinct buttons. Proposed buildings are also available in the adjacent selector."
+    [attr.viewBox]="viewBox()"
+    (pointerdown)="onPointerDown($event)"
+    (pointermove)="onPointerMove($event)"
+    (pointerup)="onPointerUp($event)"
+    (keydown)="onKeydown($event)"
+  >
+    <title>Integrated UNIVEN campus masterplan</title>
+    <defs>
+      <pattern
+        id="mp-roof-hatch"
+        width="4"
+        height="4"
+        patternUnits="userSpaceOnUse"
+        patternTransform="rotate(20)"
+      >
+        <rect width="4" height="4" fill="#dfc89d" />
+        <path d="M0 0V4" stroke="#8f7957" stroke-width=".6" />
+      </pattern>
+    </defs>
+
+    @for (s of baseShapes(); track $index) {
+      <path
+        [attr.d]="s.d"
+        [attr.fill]="s.fill"
+        [attr.stroke]="s.stroke"
+        [attr.stroke-width]="s.width"
+        [attr.fill-opacity]="s.opacity ?? null"
+        [attr.stroke-dasharray]="s.dash ?? null"
+        fill-rule="evenodd"
+        vector-effect="non-scaling-stroke"
+      />
+    }
+
+    @for (b of buildings(); track b.id) {
+      @let selected = b.id === store.selectedId();
+      <path
+        class="building"
+        [attr.data-building]="b.id"
+        [attr.d]="b.d"
+        [attr.fill]="selected ? '#66a796' : useColour(b.use)"
+        [attr.stroke]="selected ? '#164c41' : '#334c3a'"
+        [attr.stroke-width]="selected ? 2.2 : 0.9"
+        fill-rule="evenodd"
+        vector-effect="non-scaling-stroke"
+      />
+    }
+
+    @for (t of store.plan()?.newTrees; track $index) {
+      <circle
+        [attr.cx]="t[0]"
+        [attr.cy]="-t[1]"
+        r="3"
+        fill="#acc28b"
+        stroke="#6f8654"
+        stroke-width=".3"
+      />
+    }
+
+    @for (h of store.plan()?.hubs; track h.id) {
+      <circle [attr.cx]="h.point[0]" [attr.cy]="-h.point[1]" r="3" fill="#7a6a43" />
+      <text
+        [attr.x]="h.point[0] + 7"
+        [attr.y]="-h.point[1] - 6"
+        [attr.font-size]="labelSize()"
+        fill="#354e36"
+        paint-order="stroke"
+        stroke="#fbf9ed"
+        stroke-width="2"
+      >
+        {{ h.id }}
+      </text>
+    }
+
+    @for (d of boundaryLines(); track $index) {
+      <path
+        [attr.d]="d"
+        fill="none"
+        stroke="#b97a5f"
+        stroke-width="1.1"
+        stroke-dasharray="7 4"
+        vector-effect="non-scaling-stroke"
+      />
+    }
+
+    @if (store.layers().attention) {
+      @for (c of cases(); track c.id) {
+        <g class="case-marker" [attr.data-case-map]="c.id">
+          <circle
+            [attr.cx]="c.point![0]"
+            [attr.cy]="-c.point![1]"
+            [attr.r]="c.id.startsWith('W') ? 6 : 4"
+            fill="#c57d5a"
+            stroke="#fff4da"
+            stroke-width="1.2"
+            vector-effect="non-scaling-stroke"
+          />
+          <title>{{ c.title }}</title>
+        </g>
+      }
+    }
+
+    @if (checkedBoundary(); as cb) {
+      <g>
+        @for (pts of cb.lines; track $index) {
+          <polyline
+            [attr.points]="pts"
+            fill="none"
+            stroke="#b3263b"
+            stroke-width="1.5"
+            vector-effect="non-scaling-stroke"
+          />
+        }
+        @for (g of cb.gaps; track $index) {
+          <circle
+            [attr.cx]="g[0]"
+            [attr.cy]="g[1]"
+            r="6"
+            fill="#fff4df"
+            stroke="#b3263b"
+            stroke-width="2"
+          />
+        }
+      </g>
+    }
+  </svg>
+  <div class="mp-map-north">↑ N</div>
+  <div class="mp-map-overlay">
+    <span>{{ store.plan()?.title }} · local metres</span>
+    <span>View width {{ store.camera().w | za }} m · drag to pan</span>
+  </div>
+</div>

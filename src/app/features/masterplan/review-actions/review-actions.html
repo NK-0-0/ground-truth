@@ -1,0 +1,115 @@
+<app-reference-note boundaryPill />
+<h3>Analysis → design response → next action</h3>
+<p class="mp-caption">
+  A mapped design response is different from a verified outcome. Markers connect the source findings
+  to the plan; responsible offices below are suggestions until someone is assigned.
+</p>
+
+<div class="mp-controls">
+  <div>
+    <label for="mp-case-filter">Show investigations</label>
+    <select id="mp-case-filter" (change)="setFilter($any($event.target).value)">
+      <option value="all" [selected]="store.caseFilter() === 'all'">All source findings</option>
+      <option value="walkway" [selected]="store.caseFilter() === 'walkway'">
+        Five lighting / surface records
+      </option>
+      <option value="design" [selected]="store.caseFilter() === 'design'">
+        Campus design and programme
+      </option>
+    </select>
+  </div>
+  <button type="button" (click)="setFilter('all')">Show all findings</button>
+</div>
+
+<div class="mp-action-grid">
+  <div class="mp-table-wrap mp-action-table" tabindex="0">
+    <table>
+      <thead>
+        <tr>
+          <th>Finding</th>
+          <th>Design response</th>
+          <th>Evidence still needed</th>
+          <th>Status</th>
+          <th>Locate</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (c of cases(); track c.id) {
+          @let status = statusOf(c.id);
+          <tr [attr.data-active]="c.id === store.activeCaseId()">
+            <td>
+              <b>{{ c.title }}</b>
+              <p>{{ c.finding }}</p>
+              <small>{{ c.source }}</small>
+            </td>
+            <td>{{ c.response }}</td>
+            <td>
+              {{ c.nextStep }}
+              <p class="mp-caption">Suggested: {{ c.suggestedOffice }}</p>
+            </td>
+            <td>
+              <span
+                class="mp-status"
+                [class.progress]="status === 'In progress'"
+                [class.ready]="status === 'Ready for review'"
+                >{{ status }}</span
+              >
+              <p class="mp-caption">{{ notes()[c.id]?.owner || 'Unassigned' }}</p>
+            </td>
+            <td><button type="button" (click)="store.editCase(c.id)">Locate / review</button></td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+
+  <form class="mp-action-form" [formGroup]="form" (ngSubmit)="save()">
+    <h4>{{ store.activeCase()?.title }}</h4>
+    <div>
+      <label for="mp-action-office">Responsible office</label>
+      <input
+        id="mp-action-office"
+        formControlName="office"
+        maxlength="200"
+        [placeholder]="(store.activeCase()?.suggestedOffice ?? 'Unassigned') + ' (suggested)'"
+      />
+    </div>
+    <div>
+      <label for="mp-action-owner">Responsible person</label>
+      <input
+        id="mp-action-owner"
+        formControlName="owner"
+        maxlength="200"
+        placeholder="Unassigned"
+      />
+    </div>
+    <div>
+      <label for="mp-action-due">Due date</label>
+      <input id="mp-action-due" formControlName="due" type="date" />
+    </div>
+    <div>
+      <label for="mp-action-status">Investigation progress</label>
+      <select id="mp-action-status" formControlName="status">
+        @for (s of statuses; track s) {
+          <option [value]="s">{{ s }}</option>
+        }
+      </select>
+    </div>
+    <div class="mp-full">
+      <label for="mp-action-evidence">Evidence received / effect on the design</label>
+      <textarea
+        id="mp-action-evidence"
+        formControlName="evidence"
+        maxlength="2500"
+        rows="4"
+      ></textarea>
+    </div>
+    <button class="gta-primary mp-full" type="submit">Save on this device</button>
+    <p class="mp-full">
+      Saved on this device only. Notes are not shared with other users and can be lost when browser
+      data is cleared. They do not change source evidence or approve the design. Shared project
+      records require a connected backend.
+    </p>
+    <p class="mp-full" role="status">{{ saveStatus() }}</p>
+  </form>
+</div>

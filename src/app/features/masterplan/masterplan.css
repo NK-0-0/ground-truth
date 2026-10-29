@@ -1,0 +1,112 @@
+:host {
+  display: block;
+  padding: 0;
+  border-color: #517b80;
+  overflow: hidden;
+  scroll-margin-top: 12px;
+  min-width: 0;
+}
+
+.mp-top {
+  padding: 22px 22px 16px;
+  background: linear-gradient(120deg, #133e47, #102b39);
+}
+
+.mp-top h2 {
+  font-size: 25px;
+  margin: 4px 0 8px;
+}
+
+.mp-top > p {
+  max-width: 1000px;
+  color: #adc5ce;
+  font-size: 13px;
+  margin-bottom: 12px;
+}
+
+.mp-badge {
+  display: inline-block;
+  color: #cce8c4;
+  background: #365a3c;
+  border: 1px solid #5f8d5e;
+  padding: 4px 9px;
+  border-radius: 4px;
+  font-size: 10px;
+  font-weight: 650;
+  letter-spacing: 0.05em;
+}
+
+.mp-jumps {
+  display: flex;
+  gap: 7px;
+  flex-wrap: wrap;
+}
+
+.mp-jumps a {
+  display: inline-block;
+  color: #bfe5df;
+  text-decoration: none;
+  font-size: 11px;
+  padding: 7px 10px;
+  border: 1px solid #577883;
+  border-radius: 5px;
+}
+
+.mp-jumps a:hover {
+  background: #28515a;
+}
+
+.mp-kpis {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1px;
+  background: #345463;
+  border-block: 1px solid #345463;
+}
+
+.mp-kpis > div {
+  padding: 15px 20px;
+  background: #0d2935;
+  color: #adc5ce;
+  font-size: 11px;
+}
+
+.mp-kpis strong {
+  display: block;
+  font-size: 25px;
+  color: #e1eee9;
+  line-height: 1.4;
+}
+
+.mp-kpis small {
+  display: block;
+  font-size: 10px;
+}
+
+@media (max-width: 760px) {
+  .mp-top {
+    padding: 16px;
+  }
+
+  .mp-top h2 {
+    font-size: 22px;
+  }
+
+  .mp-kpis {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .mp-kpis > div {
+    padding: 12px 14px;
+  }
+
+  .mp-kpis strong {
+    font-size: 22px;
+  }
+}
+
+@media (max-width: 460px) {
+  .mp-top h2 {
+    font-size: 20px;
+  }
+}

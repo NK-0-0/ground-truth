@@ -1,0 +1,101 @@
+<app-reference-note boundaryPill />
+<h3>Inspect the campus masterplan</h3>
+<p class="mp-caption">
+  Buildings and programme allocations are concept proposals. Public-private colours describe
+  intended management, not existing access rights. The dashed boundary remains incomplete.
+</p>
+
+<div class="mp-controls">
+  <div>
+    <label for="mp-plan-choice">Design shown on this map</label>
+    <select id="mp-plan-choice" (change)="choosePlan($any($event.target).value)">
+      @for (o of planOptions; track o.key) {
+        <option [value]="o.key" [selected]="o.key === store.planKey()">{{ o.label }}</option>
+      }
+    </select>
+  </div>
+  <button type="button" (click)="store.fit()">Whole campus</button>
+  <button type="button" (click)="store.focusPrecinct('core')">Academic core</button>
+  <button type="button" (click)="store.focusPrecinct('south')">Southern arrival</button>
+  <button type="button" (click)="store.focusPrecinct('res')">Student living</button>
+  <button type="button" aria-label="Zoom masterplan in" (click)="store.zoom(0.7)">+</button>
+  <button type="button" aria-label="Zoom masterplan out" (click)="store.zoom(1 / 0.7)">−</button>
+</div>
+
+<div class="mp-layer-row">
+  @for (l of layerToggles; track l.key) {
+    <label>
+      <input
+        type="checkbox"
+        [checked]="store.layers()[l.key]"
+        (change)="toggleLayer(l.key, $event)"
+      />
+      {{ l.label }}
+    </label>
+  }
+</div>
+
+<div class="mp-map-grid">
+  <div>
+    <app-masterplan-map />
+    <div class="mp-legend">
+      @for (item of legend; track item[1]) {
+        <span><i [style.background]="item[0]"></i>{{ item[1] }}</span>
+      }
+    </div>
+    <p class="mp-caption" id="mp-view-status" role="status">{{ store.viewStatus() }}</p>
+  </div>
+
+  <aside class="mp-inspect">
+    <label for="mp-building">Choose a proposed building or wing</label>
+    <select id="mp-building" (change)="store.selectBuilding($any($event.target).value)">
+      @for (b of store.plan()?.buildings; track b.id) {
+        <option [value]="b.id" [selected]="b.id === store.selectedId()">
+          {{ b.id }} · {{ b.use }}
+        </option>
+      }
+    </select>
+    <div class="mp-controls">
+      <button type="button" (click)="store.stepBuilding(-1)">← Previous</button>
+      <button type="button" (click)="store.stepBuilding(1)">Next →</button>
+    </div>
+
+    @if (store.selectedBuilding(); as b) {
+      <div>
+        <h4>{{ b.id }}</h4>
+        <dl>
+          <dt>Source requirement</dt>
+          <dd>{{ b.parentProgrammeID || b.id }}</dd>
+          <dt>Use</dt>
+          <dd>{{ b.use }}</dd>
+          <dt>Precinct</dt>
+          <dd>{{ b.homePrecinct }}</dd>
+          <dt>Gross allocation</dt>
+          <dd>{{ b.designGFAM2 | za: 2 }} m²</dd>
+          <dt>Gross footprint</dt>
+          <dd>{{ b.groundM2 | za: 2 }} m²</dd>
+          <dt>Storeys</dt>
+          <dd>{{ b.storeys }}</dd>
+          <dt>Display height</dt>
+          <dd>{{ b.storeys * 3.2 | za: 1 }} m · assumed</dd>
+          <dt>Form</dt>
+          <dd>{{ b.form }}</dd>
+        </dl>
+        <p class="mp-note">
+          @if (b.conditionalReplacementDependency) {
+            Replacement-dependent concept: confirm condition, decanting and authority.
+          } @else {
+            Concept allocation: confirm functional floor plans and technical requirements.
+          }
+        </p>
+      </div>
+    }
+
+    <button type="button" (click)="store.focusSelected()">Focus this building</button>
+    <button type="button" (click)="store.inspectIn3d()">Inspect in 3D</button>
+    <p>
+      Concept use and assumed heights follow the source programme. Floor plans, measured levels and
+      approvals still need review.
+    </p>
+  </aside>
+</div>

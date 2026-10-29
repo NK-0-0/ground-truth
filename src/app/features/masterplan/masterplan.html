@@ -1,0 +1,61 @@
+@if (data.masterplan.error()) {
+  <div class="mp-top">
+    <h2>Integrated masterplan</h2>
+    <p role="alert">The campus review data could not be loaded. Reload the page to retry.</p>
+  </div>
+} @else if (!store.plan()) {
+  <div class="mp-top">
+    <h2>Loading the campus review…</h2>
+    <p role="status">Reading the maps and design records.</p>
+  </div>
+} @else {
+  <div class="mp-top">
+    <span class="mp-badge">R8 · INTEGRATED CAMPUS CONCEPT</span>
+    <h2>Compare campus options. Know what needs checking.</h2>
+    <p>
+      Compare campus development options, inspect the planning evidence and record the checks needed
+      before a project proceeds.
+    </p>
+    <div class="mp-jumps">
+      <a href="#mp-plan">Campus plan</a>
+      <a href="#mp-original">What we retained</a>
+      <a href="#mp-alternatives">Design alternatives</a>
+      <a href="#mp-actions">Evidence and actions</a>
+      <a href="#mp-programme">Full programme</a>
+      <a href="#mp-3d">3D inspection</a>
+      <a href="#mp-delivery">Delivery review</a>
+    </div>
+  </div>
+
+  @let k = store.kpis();
+  <div class="mp-kpis">
+    <div>
+      <strong>{{ k.blocks }}</strong
+      >Physical blocks / wings<small>{{ store.plan()?.title }}</small>
+    </div>
+    <div>
+      <strong>{{ k.placed | za }} m²</strong>Modelled gross floor area
+      <small>{{ k.placedShare | za: 1 }}% of the printed source programme</small>
+    </div>
+    <div>
+      <strong>{{ k.full }} / 82</strong>Fully placed requirements
+      <small>{{ k.partial }} partly placed · {{ k.unsited }} unsited</small>
+    </div>
+    <div>
+      <strong>{{ k.gap | za }} m²</strong>Unresolved source requirement
+      <small>Future study reserves are not proved capacity</small>
+    </div>
+  </div>
+
+  <app-public-analysis />
+  <app-older-analysis />
+  <app-campus-plan />
+  <app-original-vision />
+  <app-alternatives />
+  <app-smart-furniture />
+  <app-campus-3d />
+  <app-review-actions />
+  <app-programme-table />
+  <app-delivery />
+  <app-sources />
+}

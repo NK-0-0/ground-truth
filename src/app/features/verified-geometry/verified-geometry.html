@@ -1,0 +1,275 @@
+<header class="hg-head">
+  <span class="hg-kicker">GROUNDTRUTH · RECOMPUTED GEOMETRY</span>
+  <h2>Campus decisions backed by checked geometry</h2>
+  <p>
+    Source-scoped proposal populations. Exact integration in both axes, with an independent grid
+    check. Open drawing boundaries do not establish land ownership or safe excavation clearance.
+  </p>
+  <div class="hg-actions">
+    <button type="button" [disabled]="running()" (click)="run()">Run verification</button>
+    <label class="hg-file">
+      Reload source JSON
+      <input #file type="file" accept=".json,application/json" (change)="reload(file)" />
+    </label>
+    <button type="button" [disabled]="!verified()" (click)="exportDxf()">Export checked DXF</button>
+  </div>
+  <p class="hg-status" role="status">{{ status() }}</p>
+  @if (error(); as message) {
+    <p class="hg-error" role="alert">{{ message }}</p>
+  }
+  <small>{{ fingerprint('canonical') }}</small>
+</header>
+
+@if (data(); as d) {
+  <div class="hg-body">
+    <h3>Three populations · no combined total</h3>
+    <div class="mp-table-wrap" tabindex="0">
+      <table>
+        <thead>
+          <tr>
+            <th>Source population</th>
+            <th>Records</th>
+            <th>Overlapping records</th>
+            <th>Unique footprint</th>
+            <th>Evidence</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th>Archive</th>
+            <td>
+              {{ archive.records
+              }}<small>Reported source population · source date UNVERIFIED</small>
+            </td>
+            <td>{{ archive.overlaps }}<small>Reported value · reproduced: false</small></td>
+            <td>UNVERIFIED · geometry not supplied</td>
+            <td>
+              No fabricated footprint subset; not joined to either snapshot.<small>{{
+                fingerprint('archive')
+              }}</small>
+            </td>
+          </tr>
+          @for (row of ledger(); track row.key) {
+            <tr>
+              <th>{{ row.label }}</th>
+              <td>
+                {{ row.records }}<small>{{ fingerprint(row.key) }}</small>
+              </td>
+              <td>
+                @if (row.overlaps !== undefined) {
+                  <strong>{{ row.overlaps | za: 2 : 0 }}</strong
+                  ><small>{{ fingerprint(row.key) }}</small>
+                } @else {
+                  WITHHELD · verification pending
+                }
+              </td>
+              <td>
+                @if (row.area !== undefined) {
+                  <strong>{{ row.area | za: 2 : 0 }} m²</strong
+                  ><small>{{ fingerprint(row.key) }}</small>
+                } @else {
+                  WITHHELD · verification pending
+                }
+              </td>
+              <td>
+                {{ row.evidence }}<br />
+                {{ row.verified ? 'PASS · X + Y + grid' : 'BLOCKED · awaiting recomputation' }}
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+    <p class="mp-note">{{ agreement() }}</p>
+
+    <h3>Hard planning gates</h3>
+    <div class="hg-gates">
+      @for (g of gates(); track g.name) {
+        <article [class.pass]="g.pass">
+          <b>{{ g.pass ? 'PASS' : 'FAIL' }} · {{ g.name }}</b>
+          <p>{{ g.desc }}</p>
+        </article>
+      }
+    </div>
+    <div class="hg-actions">
+      <button type="button" disabled>Check inside / outside campus</button>
+      <span class="hg-pill fail">{{ boundaryText() }}</span>
+    </div>
+    <p>{{ boundaryMethod() }}</p>
+    <p class="mp-note">
+      UNVERIFIED: approved campus boundary; land title; statutory heights; utility capacity, current
+      depth, ownership and construction clearance. A passing numerical check is not planning
+      approval.
+    </p>
+
+    <nav class="hg-links" aria-label="Verified geometry views">
+      <a href="#hg-plan">Plan</a>
+      <a href="#hg-model">3D</a>
+      <a href="#hg-options">Options lab</a>
+      <a href="#hg-compare">Compare snapshots</a>
+      <a href="#hg-queue">Investigation queue</a>
+    </nav>
+
+    @if (boundary(); as b) {
+      <section id="hg-plan">
+        <h3>Plan · source geometry</h3>
+        <label>
+          Population
+          <select (change)="chooseSet($any($event.target).value)">
+            <option value="canonical" [selected]="setKey() === 'canonical'">Canonical GIS</option>
+            <option value="controlled" [selected]="setKey() === 'controlled'">
+              Retained controlled snapshot
+            </option>
+          </select>
+        </label>
+        <p>{{ selectedText() || 'Select a footprint to inspect its source-scoped record.' }}</p>
+        <app-geometry-map
+          [data]="d"
+          [boundary]="b"
+          [setKey]="setKey()"
+          [features]="features()"
+          [selected]="selected()[setKey()]"
+          [fingerprint]="fingerprint(setKey())"
+          (featureSelected)="selectFeature(setKey(), $event)"
+        />
+      </section>
+    }
+
+    <section id="hg-model">
+      <h3>3D · illustrative extrusions</h3>
+      <div class="hg-actions">
+        <label>
+          Assumed height, metres
+          <input
+            type="number"
+            [value]="height()"
+            min="0"
+            max="100"
+            step="1"
+            (input)="setHeight($any($event.target).value)"
+          />
+        </label>
+        <button type="button" (click)="angle.set(angle() + 0.2)">Rotate model</button>
+        <span>{{ heightCheck() }}</span>
+      </div>
+      <canvas
+        #canvas
+        tabindex="0"
+        aria-label="Campus concept with open source boundary and derived study extent. Use Rotate model and Assumed height controls."
+      ></canvas>
+    </section>
+
+    @if (boundary(); as b) {
+      <section id="hg-options">
+        <h3>Options lab · test a location without changing the source</h3>
+        <div class="hg-actions">
+          <label>
+            East shift, metres
+            <input
+              type="number"
+              [value]="dx()"
+              step="1"
+              (input)="setOffset('dx', $any($event.target).value)"
+            />
+          </label>
+          <label>
+            South shift, metres
+            <input
+              type="number"
+              [value]="dy()"
+              step="1"
+              (input)="setOffset('dy', $any($event.target).value)"
+            />
+          </label>
+          <button type="button" [disabled]="!verified() || optionRunning()" (click)="runOption()">
+            Verify this option
+          </button>
+        </div>
+        <p>{{ optionResult() }}</p>
+        <app-geometry-map
+          [data]="d"
+          [boundary]="b"
+          [setKey]="setKey()"
+          [features]="features()"
+          [selected]="selected()[setKey()]"
+          [offset]="[dx(), dy()]"
+          [fingerprint]="fingerprint(setKey())"
+          (featureSelected)="selectFeature(setKey(), $event)"
+        />
+      </section>
+
+      <section id="hg-compare">
+        <h3>Compare · no identity join between snapshots</h3>
+        <p>
+          Side-by-side geometry only. A repeated OID is not evidence that two records represent the
+          same building.
+        </p>
+        <div class="hg-compare">
+          @for (k of setKeys; track k) {
+            <div>
+              <h4>
+                {{
+                  k === 'canonical' ? 'Canonical GIS' : 'Retained controlled · different geometry'
+                }}
+              </h4>
+              <app-geometry-map
+                compact
+                [data]="d"
+                [boundary]="b"
+                [setKey]="k"
+                [features]="d.sets[k].features"
+                [selected]="selected()[k]"
+                [fingerprint]="fingerprint(k)"
+                (featureSelected)="selectFeature(k, $event)"
+              />
+            </div>
+          }
+        </div>
+      </section>
+    }
+
+    <section id="hg-queue">
+      <h3>
+        Investigation queue <span class="hg-pill fail">{{ boundaryText() }}</span>
+      </h3>
+      <div class="mp-table-wrap" tabindex="0">
+        <table>
+          <thead>
+            <tr>
+              <th>Gate</th>
+              <th>Required evidence</th>
+              <th>Current decision</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Campus limits</td>
+              <td>Close and reconcile source linework; approved survey and title evidence</td>
+              <td>BLOCKED — no campus containment result</td>
+            </tr>
+            <tr>
+              <td>Coordinate registration</td>
+              <td>Survey control accepting the inherited GIS/CAD transform</td>
+              <td>UNVERIFIED — declaration is not independent registration</td>
+            </tr>
+            <tr>
+              <td>Servitude provenance</td>
+              <td>Reconcile Lo29/Lo31 source names, ownership and legal extents</td>
+              <td>UNVERIFIED — screening envelopes only</td>
+            </tr>
+            <tr>
+              <td>Construction safety</td>
+              <td>Current service locating and responsible authority clearance</td>
+              <td>UNVERIFIED — no strike probabilities or clearance claims</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <details open>
+      <summary>Verification method and evidence</summary>
+      <pre>{{ proof() }}</pre>
+    </details>
+  </div>
+}

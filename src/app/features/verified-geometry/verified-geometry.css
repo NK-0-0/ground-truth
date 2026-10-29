@@ -1,0 +1,197 @@
+:host {
+  display: block;
+  margin: 16px 0 24px;
+  padding: 0;
+  border: 1px solid #5f918d;
+}
+
+.hg-head,
+.hg-body {
+  padding: 22px;
+}
+
+.hg-head {
+  background: #123b43;
+  border-bottom: 1px solid #466874;
+}
+
+h2 {
+  font-size: 25px;
+}
+
+h3 {
+  margin: 24px 0 12px;
+}
+
+h4 {
+  margin: 8px 0;
+}
+
+.hg-kicker {
+  color: #a4dbca;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+}
+
+.hg-actions {
+  display: flex;
+  gap: 12px;
+  align-items: end;
+  flex-wrap: wrap;
+  margin: 14px 0;
+}
+
+.hg-actions label {
+  display: block;
+}
+
+input,
+select {
+  background: #102b39;
+  color: #e3eeee;
+  border: 1px solid #62818b;
+  border-radius: 4px;
+  padding: 10px;
+  max-width: 100%;
+}
+
+input[type='number'] {
+  width: 110px;
+}
+
+.hg-file input {
+  display: block;
+  max-width: 260px;
+}
+
+button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+small {
+  display: block;
+  color: #b0c8ce;
+  font-size: 10px;
+  font-weight: 400;
+  margin: 6px 0;
+  overflow-wrap: anywhere;
+}
+
+.hg-status {
+  min-height: 24px;
+}
+
+.hg-error {
+  border: 2px solid #ef8491;
+  background: #692638;
+  padding: 16px;
+  color: #fff;
+}
+
+.hg-gates {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 9px;
+}
+
+.hg-gates article {
+  padding: 14px;
+  background: #0b2632;
+  border: 1px solid #517472;
+  border-left: 4px solid #ba646e;
+}
+
+.hg-gates .pass {
+  border-left-color: #8bc8a7;
+}
+
+.hg-gates p {
+  font-size: 11px;
+  margin: 7px 0 0;
+}
+
+.hg-links {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  padding: 15px 0;
+}
+
+.hg-links a {
+  padding: 9px 12px;
+  border: 1px solid #527782;
+  border-radius: 4px;
+  color: #b9e7d6;
+}
+
+section {
+  scroll-margin-top: 18px;
+}
+
+.hg-compare {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+canvas {
+  width: 100%;
+  height: 480px;
+  display: block;
+}
+
+canvas:focus-visible {
+  outline: 3px solid #edbe76;
+  outline-offset: 3px;
+}
+
+pre {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  background: #071d28;
+  padding: 16px;
+  max-height: 500px;
+  overflow: auto;
+  color: #b5d7d3;
+  font-size: 11px;
+}
+
+details {
+  margin-top: 20px;
+}
+
+/* The method panel is always open; the summary is a heading, not a toggle. */
+details > summary {
+  cursor: default;
+  pointer-events: none;
+}
+
+details > summary::marker {
+  content: '';
+}
+
+@media (max-width: 850px) {
+  .hg-gates {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .hg-compare {
+    grid-template-columns: 1fr;
+  }
+
+  .hg-head,
+  .hg-body {
+    padding: 15px;
+  }
+}
+
+@media (max-width: 460px) {
+  .hg-gates {
+    grid-template-columns: 1fr;
+  }
+
+  h2 {
+    font-size: 21px;
+  }
+}

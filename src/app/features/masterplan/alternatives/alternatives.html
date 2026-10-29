@@ -1,0 +1,74 @@
+<app-reference-note boundaryPill />
+<h3>Compare the three design alternatives</h3>
+<p class="mp-caption">
+  Each alternative uses the same historic 82-entry source programme. The bars show gross floor-area
+  allocation. The comparison below also uses consistently recalculated route and interface
+  quantities; none is a performance score. R8 carries forward C’s allocation and R7’s form
+  refinements, then adds the integrated public-space framework.
+</p>
+
+<div class="mp-options">
+  @for (o of options(); track o.key) {
+    <article class="mp-option">
+      <img
+        [src]="'images/alternative-' + o.key + '.jpg'"
+        [alt]="o.plan.title + ' campus concept drawing'"
+        loading="lazy"
+      />
+      <div class="mp-option-body">
+        <h4>{{ o.plan.title }}</h4>
+        <p>
+          {{ o.plan.buildings.length }} physical blocks ·
+          {{ o.plan.metrics.fullyPlacedProgrammeEntries }} fully placed requirements<br />
+          {{ o.plan.metrics.placedGFAM2 | za }} m² allocated ·
+          {{ o.plan.metrics.unplacedGFAM2 | za }} m² unresolved
+        </p>
+        <div
+          class="mp-bar"
+          role="img"
+          [attr.aria-label]="(o.share | za: 1) + ' percent of source gross area allocated'"
+        >
+          <i [style.width.%]="o.share"></i>
+        </div>
+        <button type="button" (click)="store.inspectAlternative(o.key)">
+          Inspect this alternative on the map
+        </button>
+      </div>
+    </article>
+  }
+</div>
+
+<h4>Compare the same measured quantities</h4>
+<p class="mp-caption">
+  Calculated from each concept’s supplied geometry. Route length is infrastructure quantity, not
+  journey time. Intersections are review areas, not calibrated risk. Shade performance, costs and
+  accessible gradients remain untested.
+</p>
+<div class="mp-table-wrap" tabindex="0" role="region" aria-label="Design quantity comparison">
+  <table>
+    <thead>
+      <tr>
+        <th>Design</th>
+        <th>Allocated GFA m²</th>
+        <th>Route length m</th>
+        <th>Entries touching routes within 3 cm</th>
+        <th>Walking / road overlap m²</th>
+        <th>Walking / utility-envelope overlap m²</th>
+        <th>Replacement-dependent blocks</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (c of store.data()?.comparison; track c.key) {
+        <tr>
+          <td>{{ c.key }}</td>
+          <td>{{ c.allocated | za: 1 : 0 }}</td>
+          <td>{{ c.routeLength | za: 1 : 0 }}</td>
+          <td>{{ c.entriesConnected }}/{{ c.blocks }}</td>
+          <td>{{ c.roadInterface | za: 1 : 0 }}</td>
+          <td>{{ c.utilityInterface | za: 1 : 0 }}</td>
+          <td>{{ c.replacementDependencies }}</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>

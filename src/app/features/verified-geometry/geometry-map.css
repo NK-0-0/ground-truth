@@ -1,0 +1,59 @@
+:host {
+  display: block;
+}
+
+.hg-map-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+  background: #0b2632;
+  padding: 10px;
+  font-size: 12px;
+}
+
+svg {
+  width: 100%;
+  height: 500px;
+  background: #f6f4e9;
+  display: block;
+  touch-action: none;
+  border: 1px solid #667e71;
+}
+
+svg.compact {
+  height: 400px;
+}
+
+svg:focus-visible {
+  outline: 3px solid #edbe76;
+  outline-offset: 3px;
+}
+
+.feature {
+  cursor: pointer;
+}
+
+.feature:hover {
+  fill: #dfb261;
+}
+
+.hg-map-note {
+  font-size: 10px;
+  color: #bad0d6;
+}
+
+@media (max-width: 850px) {
+  svg,
+  svg.compact {
+    height: 390px;
+  }
+}
+
+@media (max-width: 460px) {
+  svg,
+  svg.compact {
+    height: 320px;
+  }
+}

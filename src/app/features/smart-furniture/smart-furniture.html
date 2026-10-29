@@ -1,0 +1,91 @@
+<app-reference-note boundaryPill />
+<h3>Smart furniture · Student Commons concept</h3>
+<p>
+  20 × 16 m CAD-based envelope. Heights, finishes and planting are illustrative. C04 / source OID 11
+  remains a preview location requiring road-edge and boundary reconciliation. Some approach geometry
+  extends beyond the envelope.
+</p>
+
+<div class="mp-controls">
+  <button type="button" (click)="rotate(-0.25)">Rotate left</button>
+  <button type="button" (click)="rotate(0.25)">Rotate right</button>
+  <button type="button" (click)="zoomBy(1.2)">Zoom in</button>
+  <button type="button" (click)="zoomBy(1 / 1.2)">Zoom out</button>
+  <button type="button" (click)="reset()">Reset</button>
+  <label>
+    <input
+      type="checkbox"
+      [checked]="showRoofs()"
+      (change)="showRoofs.set($any($event.target).checked)"
+    />
+    Show roofs
+  </label>
+</div>
+
+<label for="gtrObject">Select furniture part</label>
+<select id="gtrObject" (change)="selected.set(+$any($event.target).value)">
+  @for (o of parts(); track $index) {
+    <option [value]="$index" [selected]="$index === selected()">{{ partName(o, $index) }}</option>
+  }
+</select>
+
+<canvas
+  #canvas
+  class="model"
+  tabindex="0"
+  aria-label="Selectable smart furniture concept; use the part selector or rotate buttons"
+  (click)="pick($event)"
+  (keydown)="onKeydown($event)"
+></canvas>
+
+@if (selectedInfo(); as info) {
+  <div class="part-info">
+    <b>{{ info.name }}</b>
+    <p>
+      Source: smartSDPData.objects[{{ selected() }}] · plan bounds {{ info.width }} ×
+      {{ info.depth }} m · concept elevation {{ info.z0 }}–{{ info.z1 }} m. Heights are
+      illustrative. This is a geometry part, not an accepted asset ID.
+    </p>
+  </div>
+}
+
+<h4>Eleven candidate locations</h4>
+<p>
+  Source shortlist, separate from the earlier 31-location population. These markers do not establish
+  permission or service clearance.
+</p>
+
+@if (locator(); as loc) {
+  <svg
+    class="locator"
+    [attr.viewBox]="loc.viewBox"
+    preserveAspectRatio="xMidYMid meet"
+    role="img"
+    aria-label="Eleven candidate locations in local campus coordinates"
+  >
+    @for (c of loc.context; track $index) {
+      <path
+        [attr.d]="c.d"
+        [attr.fill]="c.fill"
+        fill-rule="evenodd"
+        stroke="#8d9b80"
+        stroke-width="1"
+      />
+    }
+    @for (pts of loc.boundary; track $index) {
+      <polyline fill="none" stroke="#a47550" stroke-width="3" [attr.points]="pts" />
+    }
+    @for (c of loc.shortlist; track c.label) {
+      <circle [attr.cx]="c.point[0]" [attr.cy]="-c.point[1]" r="12" fill="#326d64" />
+      <text [attr.x]="c.point[0] + 18" [attr.y]="-c.point[1]" font-size="24" fill="#263d35">
+        {{ c.label }}
+      </text>
+    }
+    <text [attr.x]="loc.north.x" [attr.y]="loc.north.y" font-size="28" fill="#253e32">↑ N</text>
+  </svg>
+  <p class="mp-caption">
+    Grey: retained buildings · Tan: paths · Green: landscape / sport · Teal: candidate locations ·
+    Brown: incomplete boundary. Local drawing coordinates; alignment remains pending.
+  </p>
+  <p>{{ loc.summary }}</p>
+}

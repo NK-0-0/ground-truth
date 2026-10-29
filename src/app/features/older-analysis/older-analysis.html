@@ -1,0 +1,44 @@
+<app-reference-note />
+<h2>Older analysis · maps, figures and scenarios</h2>
+<p>
+  Explore the earlier infrastructure, walking, housing and site analysis. Scroll inside the bordered
+  analysis area, or use a topic link. Historical figures retain their source methods and
+  assumptions.
+</p>
+<p id="history-status" [attr.role]="failed() ? 'alert' : 'status'">{{ status() }}</p>
+
+<div class="history-tools">
+  <div class="history-topics" role="navigation" aria-label="Older analysis topics">
+    @for (t of topics; track t[0]) {
+      <button type="button" (click)="go(t[0])">{{ t[1] }}</button>
+    }
+  </div>
+  <div class="history-search">
+    <label for="history-search">Find a heading</label>
+    <input
+      id="history-search"
+      type="search"
+      placeholder="For example: lighting or housing"
+      autocomplete="off"
+      (input)="search($any($event.target).value)"
+    />
+    <button type="button" (click)="backToTop()">Analysis top ↑</button>
+  </div>
+  <div class="history-results" aria-live="polite">
+    @if (results(); as matches) {
+      @for (h of matches; track h.id) {
+        <button type="button" (click)="go(h.id)">{{ h.label }}</button>
+      } @empty {
+        No heading matches. Try another word.
+      }
+    }
+  </div>
+</div>
+
+<iframe
+  #frame
+  title="Restored older UNIVEN campus analysis"
+  sandbox="allow-scripts allow-same-origin"
+  [attr.src]="src()"
+  (load)="onFrameLoad()"
+></iframe>

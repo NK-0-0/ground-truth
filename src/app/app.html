@@ -1,0 +1,44 @@
+<a class="skip-link" href="#mp-root">Skip to campus review</a>
+
+<div class="gta-app">
+  <aside class="gta-rail">
+    <a href="#mp-root" class="gta-brand">GroundTruth<span>Campus development review</span></a>
+    <nav aria-label="Campus review sections">
+      @for (s of sections; track s.id) {
+        <button
+          type="button"
+          [attr.aria-current]="nav.active() === s.id ? 'location' : null"
+          (click)="nav.active.set(s.id); nav.scrollTo(s.id)"
+        >
+          {{ s.label }}
+        </button>
+      }
+    </nav>
+    <div class="gta-author">
+      Developed by<br /><b>Ntsako Harold Ramaru</b><br />Urban Planning · UNIVEN
+      <p>R8 · 28 October 2026<br />Complete campus concept review</p>
+    </div>
+  </aside>
+
+  <main class="gta-main">
+    <app-verified-geometry />
+
+    <header class="gta-header">
+      <div>
+        <span class="gta-kicker">CAMPUS DESIGN · ANALYSIS · DELIVERY</span>
+        <h1>Campus masterplan and project review</h1>
+      </div>
+    </header>
+    <div class="gta-status">
+      <span>Concept designs · source snapshots · technical review pending</span>
+      <span>Static web app · notes saved on this device only</span>
+    </div>
+
+    <app-masterplan />
+
+    <footer class="public-footer">
+      Ntsako Harold Ramaru / GroundTruth · Independent campus concept study · No institutional
+      approval is implied.
+    </footer>
+  </main>
+</div>

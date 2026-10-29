@@ -1,0 +1,78 @@
+<app-reference-note />
+<h3>Keep every accommodation requirement in view</h3>
+<p class="mp-caption">
+  This table follows the design selected above. “Fully placed” means the model allocates the printed
+  gross floor area; it does not prove a suitable floor plan, bed yield or departmental capacity.
+</p>
+
+<div class="mp-controls">
+  <div>
+    <label for="mp-programme-search">Find a source programme ID or use</label>
+    <input
+      id="mp-programme-search"
+      type="search"
+      placeholder="NB41, residences, academic…"
+      [value]="query()"
+      (input)="query.set($any($event.target).value)"
+    />
+  </div>
+  <div>
+    <label for="mp-programme-status">Allocation status</label>
+    <select id="mp-programme-status" (change)="setStatus($any($event.target).value)">
+      <option value="all">All 82 requirements</option>
+      <option value="unsited">No resolved footprint</option>
+      <option value="partial">Partly placed</option>
+      <option value="full">Fully placed concept</option>
+    </select>
+  </div>
+</div>
+
+<p class="mp-caption" role="status">
+  {{ store.plan()?.title }} · {{ rows().length }} of 82 source requirements shown · all-source
+  allocations stay visible in the summary.
+</p>
+
+<div class="mp-table-wrap" tabindex="0">
+  <table>
+    <thead>
+      <tr>
+        <th>Source ID</th>
+        <th>Source use</th>
+        <th>Required GFA / m²</th>
+        <th>Model allocation / m²</th>
+        <th>Unresolved / m²</th>
+        <th>Status</th>
+        <th>Inspect</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (r of rows(); track r.id) {
+        <tr>
+          <td>{{ r.id }}</td>
+          <td>{{ r.use }}</td>
+          <td>{{ r.sourceBulkM2 | za: 2 }}</td>
+          <td>{{ r.placed | za: 2 }}</td>
+          <td>{{ r.remaining | za: 2 }}</td>
+          <td>{{ statusLabels[r.status] }}</td>
+          <td>
+            @if (r.placed > 0) {
+              <button type="button" (click)="store.inspectProgramme(r.id)">Inspect</button>
+            } @else {
+              Needs capacity study
+            }
+          </td>
+        </tr>
+      } @empty {
+        <tr>
+          <td colspan="7">No source requirements match this filter.</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>
+
+<p class="mp-note">
+  The historic schedule totals 276,698.21 m². The SDF narrative gives 282,144 m²: the 5,445.79 m²
+  discrepancy still needs reconciliation. Historic phase years are not a current construction
+  programme.
+</p>

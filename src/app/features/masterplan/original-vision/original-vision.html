@@ -1,0 +1,62 @@
+<app-reference-note />
+<h3>What we retained from the original campus vision</h3>
+<p class="mp-caption">
+  The 2022 SDF is the design reference. Its pages 68–69 describe the southern academic entrance and
+  the residential–sport neighbourhood. These are source proposals, not proof of their current
+  implementation.
+</p>
+
+<div class="mp-reference-grid">
+  <article class="mp-reference">
+    <img
+      src="images/original-campus-vision.jpg"
+      alt="Original campus vision supplied by the user, showing precincts, public spaces and landscape"
+      loading="lazy"
+    />
+    <div>
+      <h4>The whole-campus structure</h4>
+      <p>
+        Retain legible precincts, connected public spaces, productive landscape and a coherent
+        movement framework.
+      </p>
+    </div>
+  </article>
+  <article class="mp-reference">
+    <img
+      src="images/original-gate3.jpg"
+      alt="UNIVEN SDF page 68: academic precinct and proposed southern Gate 3 entrance"
+      loading="lazy"
+    />
+    <div>
+      <h4>Southern entrance · SDF p.68</h4>
+      <p>
+        R8 reintroduces a southern arrival study, shared square and connected approach. Its exact
+        gate position needs confirmation.
+      </p>
+      <button type="button" (click)="inspect('south')">Inspect the southern arrival</button>
+    </div>
+  </article>
+  <article class="mp-reference">
+    <img
+      src="images/original-residential.jpg"
+      alt="UNIVEN SDF page 69: residences and shared facilities organised around student sport"
+      loading="lazy"
+    />
+    <div>
+      <h4>Student neighbourhood · SDF p.69</h4>
+      <p>
+        Link shared facilities and sport while retaining residential privacy and quieter courts.
+      </p>
+      <button type="button" (click)="inspect('res')">Inspect student living</button>
+    </div>
+  </article>
+</div>
+
+<div class="mp-retain-grid">
+  @for (p of principles; track p[0]) {
+    <article>
+      <b>{{ p[0] }}</b>
+      <p>{{ p[1] }}</p>
+    </article>
+  }
+</div>
