@@ -1,0 +1,7 @@
+[build]
+  command = "npm run build"
+  publish = "dist/ground-truth/browser"
+
+[build.environment]
+  # Angular 22 requires Node ^22.22.3 || ^24.15.0 || >=26.
+  NODE_VERSION = "24.22.2"
