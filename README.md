@@ -67,3 +67,13 @@ the Angular source.
   `groundtruth-r8-public-actions-v1`, the same key the single-file version used. Notes saved
   there before the port are kept only if the app is served from the same origin as before.
 - The original single-file HTML is still in the repository root as the reference version.
+
+## Access control
+
+The deployed site is password-protected by a Netlify Edge Function
+([netlify/edge-functions/auth.ts](netlify/edge-functions/auth.ts)) that guards every path,
+including data files and images. The password is read from the `SITE_PASSWORD`
+environment variable in Netlify. It is never committed to the repo. Changing it signs
+everyone out. If it is unset, the site returns 503 rather than serving content.
+Visitors can sign out at `/__auth/logout`. `ng serve` does not run the gate; use
+`netlify dev` to test it locally.
